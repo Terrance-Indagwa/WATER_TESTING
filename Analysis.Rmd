@@ -1,0 +1,48 @@
+---
+title: "Drinking Water Testing"
+author: "DIR_TERRANCE"
+date: "12/11/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# PACKAGES
+```{r}
+library(tidyverse)
+library(Hmisc)
+```
+
+# DATA
+## Reading In
+```{r}
+sample <- read_csv("DATA/sample.csv")
+
+dim(sample)
+
+
+str(sample)
+
+table(is.na(sample))
+
+```
+## Cleaning
+```{r}
+sample <- sample[, 2:14]
+
+
+sample$siteIDScheme <- as.factor(sample$siteIDScheme)
+sample$media <- as.factor(sample$media)
+
+#checking for NAs per column
+missing_values <- sample %>% 
+  summarise_all(funs(sum(is.na(.))))# so its the sd variable with NAs!
+
+#lets impute the NAs with some random numbers
+sample$sd <- impute(sample$sd, "random") 
+
+```
+
+
